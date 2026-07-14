@@ -1,3 +1,11 @@
+/*
+在终端中输入：
+snow git execute @advanced_data_engineering_snowflake/branches/main/module-1/hamburg_weather/pipeline/data/load_tasty_bytes.sql -D "env='STAGING'" 
+添加“--database=COURSE_REPO --schema==PUBLIC”参数会报错
+database和schema在config.toml中修改
+*/
+
+
 USE ROLE accountadmin;
 
 
@@ -57,15 +65,6 @@ raw zone table build
 -- country table build
 
 -- todo: complete table build
-CREATE TABLE {{env}}_tasty_bytes.raw_pos.country
-(
-   country_id NUMBER(18,0),
-   country VARCHAR(16777216),
-   iso_currency VARCHAR(3),
-   iso_country VARCHAR(2),
-   city VARCHAR(16777216),
-   city_population VARCHAR(16777216)
-);
 
 
 -- franchise table build
@@ -77,7 +76,8 @@ CREATE OR ALTER TABLE {{env}}_tasty_bytes.raw_pos.franchise
    city VARCHAR(16777216),
    country VARCHAR(16777216),
    e_mail VARCHAR(16777216),
-   phone_number VARCHAR(16777216)
+   phone_number VARCHAR(16777216),
+   
 );
 
 
@@ -90,7 +90,8 @@ CREATE OR ALTER TABLE {{env}}_tasty_bytes.raw_pos.location
    city VARCHAR(16777216),
    region VARCHAR(16777216),
    iso_country_code VARCHAR(16777216),
-   country VARCHAR(16777216)
+   country VARCHAR(16777216).
+   city_id NUMBER(19,0)
 );
 
 
@@ -292,18 +293,18 @@ raw zone table load
 USE WAREHOUSE demo_build_wh;
 
 
--- country table load
--- COPY INTO {{env}}_tasty_bytes.raw_pos.country
--- (
---    country_id,
---    country,
---    iso_currency,
---    iso_country,
---    city_id,
---    city,
---    city_population
--- )
--- FROM @{{env}}_tasty_bytes.public.s3load/raw_pos/country/;
+country table load
+COPY INTO {{env}}_tasty_bytes.raw_pos.country
+(
+   country_id,
+   country,
+   iso_currency,
+   iso_country,
+   city_id,
+   city,
+   city_population
+)
+FROM @{{env}}_tasty_bytes.public.s3load/raw_pos/country/;
 
 
 -- franchise table load
